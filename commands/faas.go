@@ -29,16 +29,17 @@ var (
 
 // Flags that are to be added to subset of commands.
 var (
-	fprocess     string
-	functionName string
-	handlerDir   string
-	network      string
-	gateway      string
-	handler      string
-	image        string
-	imagePrefix  string
-	language     string
-	tlsInsecure  bool
+	fprocess      string
+	functionName  string
+	handlerDir    string
+	network       string
+	gateway       string
+	handler       string
+	image         string
+	imagePrefix   string
+	language      string
+	withoutOutput bool
+	tlsInsecure   bool
 )
 
 var stat = func(filename string) (os.FileInfo, error) {

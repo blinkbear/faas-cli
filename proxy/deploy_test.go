@@ -15,6 +15,7 @@ import (
 )
 
 const tlsNoVerify = true
+const withoutOutput = false
 
 type deployProxyTest struct {
 	title               string
@@ -52,6 +53,7 @@ func runDeployProxyTest(t *testing.T, deployTest deployProxyTest) {
 			FunctionResourceRequest{},
 			false,
 			tlsNoVerify,
+			withoutOutput,
 			"",
 			"",
 		})
@@ -121,6 +123,7 @@ func Test_DeployFunction_generateFuncStr(t *testing.T) {
 				FunctionResourceRequest{},
 				false,
 				tlsNoVerify,
+				withoutOutput,
 				"",
 				"",
 			},
@@ -144,6 +147,7 @@ func Test_DeployFunction_generateFuncStr(t *testing.T) {
 				FunctionResourceRequest{},
 				false,
 				tlsNoVerify,
+				withoutOutput,
 				"",
 				"nameSpace",
 			},

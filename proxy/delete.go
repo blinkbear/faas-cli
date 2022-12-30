@@ -16,7 +16,7 @@ import (
 )
 
 // DeleteFunction delete a function from the OpenFaaS server
-func (c *Client) DeleteFunction(ctx context.Context, functionName string, namespace string) error {
+func (c *Client) DeleteFunction(ctx context.Context, functionName string, namespace string, withoutOutput bool) error {
 	var err error
 	delReq := requests.DeleteFunctionRequest{FunctionName: functionName}
 	reqBytes, _ := json.Marshal(&delReq)
@@ -47,7 +47,9 @@ func (c *Client) DeleteFunction(ctx context.Context, functionName string, namesp
 
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusCreated, http.StatusAccepted:
-		fmt.Println("Removing old function.")
+		if !withoutOutput {
+			fmt.Println("Removing old function.")
+		}
 	case http.StatusNotFound:
 		err = fmt.Errorf("No existing function to remove")
 	case http.StatusUnauthorized:

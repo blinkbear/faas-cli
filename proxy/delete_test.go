@@ -22,7 +22,7 @@ func Test_DeleteFunction(t *testing.T) {
 	proxyClient, _ := NewClient(cliAuth, s.URL, nil, &defaultCommandTimeout)
 
 	stdout := test.CaptureStdout(func() {
-		proxyClient.DeleteFunction(context.Background(), "function-to-delete", "")
+		proxyClient.DeleteFunction(context.Background(), "function-to-delete", "", false)
 	})
 
 	r := regexp.MustCompile(`(?m:Removing old function.)`)
@@ -38,8 +38,7 @@ func Test_DeleteFunction_404(t *testing.T) {
 	cliAuth := NewTestAuth(nil)
 	proxyClient, _ := NewClient(cliAuth, s.URL, nil, &defaultCommandTimeout)
 
-	err := proxyClient.DeleteFunction(context.Background(), "function-to-delete", "")
-
+	err := proxyClient.DeleteFunction(context.Background(), "function-to-delete", "", false)
 	r := regexp.MustCompile(`(?m:No existing function to remove)`)
 	if !r.MatchString(err.Error()) {
 		t.Fatalf("Want: %s, got: %s", "No existing function to remove", err.Error())

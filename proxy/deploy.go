@@ -46,6 +46,7 @@ type DeployFunctionSpec struct {
 	FunctionResourceRequest FunctionResourceRequest
 	ReadOnlyRootFilesystem  bool
 	TLSInsecure             bool
+	WithoutOutput           bool
 	Token                   string
 	Namespace               string
 }
@@ -72,8 +73,11 @@ func (c *Client) DeployFunction(context context.Context, spec *DeployFunctionSpe
 	} else if statusCode == http.StatusOK {
 		fmt.Println(rollingUpdateInfo)
 	}
-	fmt.Println()
-	fmt.Println(deployOutput)
+	if !spec.WithoutOutput {
+		fmt.Println()
+
+		fmt.Println(deployOutput)
+	}
 	return statusCode
 }
 
@@ -88,7 +92,7 @@ func (c *Client) deploy(context context.Context, spec *DeployFunctionSpec, updat
 	}
 
 	if spec.Replace {
-		c.DeleteFunction(context, spec.FunctionName, spec.Namespace)
+		c.DeleteFunction(context, spec.FunctionName, spec.Namespace, spec.WithoutOutput)
 	}
 
 	req := types.FunctionDeployment{

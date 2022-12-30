@@ -63,7 +63,7 @@ func Test_ScaleFunction_Not2xxAnd404(t *testing.T) {
 	cliAuth := NewTestAuth(nil)
 	proxyClient, _ := NewClient(cliAuth, s.URL, nil, &defaultCommandTimeout)
 
-	err := proxyClient.DeleteFunction(context.Background(), "function-to-scale", "")
+	err := proxyClient.DeleteFunction(context.Background(), "function-to-scale", "", false)
 
 	r := regexp.MustCompile(`(?m:Server returned unexpected status code)`)
 	if !r.MatchString(err.Error()) {

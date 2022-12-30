@@ -30,7 +30,7 @@ func init() {
 	loginCmd.Flags().BoolVarP(&passwordStdin, "password-stdin", "s", false, "Reads the gateway password from stdin")
 	loginCmd.Flags().BoolVar(&tlsInsecure, "tls-no-verify", false, "Disable TLS validation")
 	loginCmd.Flags().Duration("timeout", time.Second*5, "Override the timeout for this API call")
-
+	loginCmd.Flags().BoolVar(&withoutOutput, "without-output", false, "Do not print output from function")
 	faasCmd.AddCommand(loginCmd)
 }
 
@@ -55,7 +55,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("must provide --username or -u")
 	}
 
-	if len(password) > 0 {
+	if len(password) > 0 && !withoutOutput {
 		fmt.Println("WARNING! Using --password is insecure, consider using: cat ~/faas_pass.txt | faas-cli login -u user --password-stdin")
 		if passwordStdin {
 			return fmt.Errorf("--password and --password-stdin are mutually exclusive")
@@ -84,8 +84,9 @@ func runLogin(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("must provide a non-empty password via --password or --password-stdin")
 	}
 
-	fmt.Println("Calling the OpenFaaS server to validate the credentials...")
-
+	if !withoutOutput {
+		fmt.Println("Calling the OpenFaaS server to validate the credentials...")
+	}
 	gateway = getGatewayURL(gateway, defaultGateway, "", os.Getenv(openFaaSURLEnvironment))
 
 	if err := validateLogin(gateway, username, password, timeout, tlsInsecure); err != nil {
@@ -106,8 +107,9 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("credentials saved for", user, gateway)
-
+	if !withoutOutput {
+		fmt.Println("credentials saved for", user, gateway)
+	}
 	return nil
 }
 

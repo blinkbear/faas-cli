@@ -73,7 +73,7 @@ func init() {
 	// Set bash-completion.
 	_ = deployCmd.Flags().SetAnnotation("handler", cobra.BashCompSubdirsInDir, []string{})
 	deployCmd.Flags().BoolVar(&readTemplate, "read-template", true, "Read the function's template")
-
+	deployCmd.Flags().BoolVar(&withoutOutput, "without-output", false, "Do not print output from function")
 	deployCmd.Flags().DurationVar(&timeoutOverride, "timeout", commandTimeout, "Timeout for any HTTP calls made to the OpenFaaS API.")
 
 	faasCmd.AddCommand(deployCmd)
@@ -100,7 +100,8 @@ var deployCmd = &cobra.Command{
 				  [--secret "SECRET_NAME"]
 				  [--tag <sha|branch|describe>]
 				  [--readonly=false]
-				  [--tls-no-verify]`,
+				  [--tls-no-verify]
+				  [--without-output]`,
 
 	Short: "Deploy OpenFaaS functions",
 	Long: `Deploys OpenFaaS function containers either via the supplied YAML config using
@@ -273,8 +274,10 @@ Error: %s`, fprocessErr.Error())
 				FunctionResourceRequest: functionResourceRequest,
 				ReadOnlyRootFilesystem:  function.ReadOnlyRootFilesystem,
 				TLSInsecure:             tlsInsecure,
+				WithoutOutput:           withoutOutput,
 				Token:                   token,
-				Namespace:               function.Namespace,
+
+				Namespace: function.Namespace,
 			}
 
 			if msg := checkTLSInsecure(services.Provider.GatewayURL, deploySpec.TLSInsecure); len(msg) > 0 {
@@ -371,6 +374,7 @@ func deployImage(
 		FunctionResourceRequest: proxy.FunctionResourceRequest{},
 		ReadOnlyRootFilesystem:  readOnlyRFS,
 		TLSInsecure:             tlsInsecure,
+		WithoutOutput:           withoutOutput,
 		Token:                   token,
 		Namespace:               namespace,
 	}
