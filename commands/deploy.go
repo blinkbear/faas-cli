@@ -179,7 +179,6 @@ func runDeployCommand(args []string, image string, fprocess string, functionName
 			functionSecrets := deployFlags.secrets
 
 			function.Name = k
-			fmt.Printf("Deploying: %s.\n", function.Name)
 
 			var functionConstraints []string
 			if function.Constraints != nil {

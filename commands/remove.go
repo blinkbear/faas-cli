@@ -20,7 +20,7 @@ func init() {
 	removeCmd.Flags().BoolVar(&envsubst, "envsubst", true, "Substitute environment variables in stack.yml file")
 	removeCmd.Flags().StringVarP(&token, "token", "k", "", "Pass a JWT token to use instead of basic auth")
 	removeCmd.Flags().StringVarP(&functionNamespace, "namespace", "n", "", "Namespace of the function")
-	deployCmd.Flags().BoolVar(&withoutOutput, "without-output", false, "Do not print output from function")
+	removeCmd.Flags().BoolVar(&withoutOutput, "without-output", false, "Do not print output from function")
 	faasCmd.AddCommand(removeCmd)
 }
 
@@ -76,7 +76,6 @@ func runDelete(cmd *cobra.Command, args []string) error {
 		for k, function := range services.Functions {
 			function.Namespace = getNamespace(functionNamespace, function.Namespace)
 			function.Name = k
-			fmt.Printf("Deleting: %s.%s\n", function.Name, function.Namespace)
 			if !withoutOutput {
 				fmt.Printf("Deleting: %s.%s\n", function.Name, function.Namespace)
 			}
